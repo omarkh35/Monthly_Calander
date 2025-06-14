@@ -1,31 +1,125 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.36109.1 d17.14
-MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nothing", "nothing\nothing.vcxproj", "{607812A8-864B-4F08-B38D-EDAAE79693F9}"
-EndProject
-Global
-	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|x64 = Debug|x64
-		Debug|x86 = Debug|x86
-		Release|x64 = Release|x64
-		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{607812A8-864B-4F08-B38D-EDAAE79693F9}.Debug|x64.ActiveCfg = Debug|x64
-		{607812A8-864B-4F08-B38D-EDAAE79693F9}.Debug|x64.Build.0 = Debug|x64
-		{607812A8-864B-4F08-B38D-EDAAE79693F9}.Debug|x86.ActiveCfg = Debug|Win32
-		{607812A8-864B-4F08-B38D-EDAAE79693F9}.Debug|x86.Build.0 = Debug|Win32
-		{607812A8-864B-4F08-B38D-EDAAE79693F9}.Release|x64.ActiveCfg = Release|x64
-		{607812A8-864B-4F08-B38D-EDAAE79693F9}.Release|x64.Build.0 = Release|x64
-		{607812A8-864B-4F08-B38D-EDAAE79693F9}.Release|x86.ActiveCfg = Release|Win32
-		{607812A8-864B-4F08-B38D-EDAAE79693F9}.Release|x86.Build.0 = Release|Win32
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {7EA53BB6-0439-4225-9E2F-348DCCFC7DAB}
-	EndGlobalSection
-EndGlobal
+#include <iostream>
+#include <string>
+#include <vector>
+#include <iomanip>
+
+using namespace std;
+
+int ReadNum(string massege)
+{
+	int Number;
+	cout << massege;
+	cin >> Number;
+
+	while (cin.fail())
+	{
+		// user didn't input a number
+		cin.clear();
+		cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		cout << "Invalid Number, Enter a valid one:" << endl;
+		cin >> Number;
+	}
+
+	return Number;
+}
+
+
+bool leapOrNot(int year)
+{
+	return ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) ;
+}
+
+int CheckDaysInMonth(int year,int month)
+{
+	if (month < 1 || month>12)
+	{
+		return 0;
+	}
+	int arr[] = { 31,28,31,30,31,30,31,31,30,31,30,31 };
+	
+	return month == 2 ? leapOrNot(year) ? 29 : 28 :arr[month-1];
+		
+}
+
+
+void printDate(int year, int Month, int day)
+{
+	cout << day << "/" << Month << "/" << year << endl;
+}
+
+int calWhatDay(int year, int Month, int day=1)
+{
+	int a = (14 - Month) / 12;
+	int y = year - a;
+	int m = Month + 12 * a - 2;
+	int d = (day + y + y / 4 - y / 100 + y / 400 + (31 * m) / 12) % 7;
+
+	return d;
+
+	/*string arrDay[] = { "Sunday","Monday","Tuesday","wednesday","Thursday","Friday","Saturday" };
+
+	cout << "Day Order: " << d << endl;
+	cout << "Day Name: " << arrDay[d];*/
+}
+
+string MonthName(int Month) {
+	string arrMonth[] = { "Jan", "Feb", "Mar", "Apr", "May", "June",
+						 "July", "Aug", "Sep", "Oct", "Nov", "Dec" };
+	return arrMonth[Month - 1];
+}
+
+void PrintMainScreen(int Month)
+{
+	printf("---------------- %s ----------------\n", MonthName(Month).c_str());
+	cout << setw(5) << right << "sun"
+		<< setw(5) << right << "Mon"
+		<< setw(5) << right << "Tue"
+		<< setw(5) << right << "Wed"
+		<< setw(5) << right << "Thu"
+		<< setw(5) << right << "Fri"
+		<< setw(6) << right << "Sat\n";
+}
+
+void printdays(int month,int year)
+{
+	int arrdays[] = { 31,28,31,30,31,30,31,31,30,31,30,31 };
+	int dayInMonth ;
+	 
+	dayInMonth =  month == 2 ? leapOrNot(year) ? 29 : 28 :  arrdays[month - 1];
+
+	int d = calWhatDay(year, month);
+	int i;
+	for (i = 0; i < d; i++)
+		printf("     ");
+	for (int j = 1; j <= dayInMonth; j++)
+	{
+		printf("%5d", j);
+
+		if (++i == 7)
+		{
+			i = 0;
+			printf("\n");
+		}
+	}
+
+}
+
+
+int main()
+{
+
+	int year=ReadNum("Input Year: ");
+	while(year!=-1){
+	int Month=ReadNum("Input Month: ");
+	//int day = ReadNum("Input Day: ");
+		
+	PrintMainScreen(Month);
+	printdays(Month, year);
+	system("pause>0");
+	system("cls");
+	year = ReadNum("Input year: ");
+
+	}
+	system("pause>0");
+	return 0;
+}
